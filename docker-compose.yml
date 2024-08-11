@@ -1,0 +1,25 @@
+services:
+  db:
+    build:
+      context: ./db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ratestask
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  web:
+    build:
+      context: ./api
+    ports:
+      - "5000:5000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:ratestask@db:5432/postgres
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
